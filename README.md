@@ -1,1 +1,1 @@
-# SakuraVPSTutorial
+# さくらVPS（ubuntu）チュートリアル
