@@ -12,3 +12,49 @@
 ![タイムアウトする](./assets/03/02.jpg)
 
 まだVPSがWebサーバーとしてセットアップされておらず、クライアントに応答を返せる状態になっていないため、このような挙動になります。
+
+### Nginx
+
+今回はWebサーバーとして「Nginx（えんじんえっくす）」というソフトウェアをインストールしていきます。
+
+ターミナルに`sudo apt install nginx`と入力して実行してみてください。
+
+![sudo apt install nginxを実行](./assets/03/03.jpg)
+
+途中で何やら質問をされることがありますが、`Y`と入力してEnterで大丈夫です。
+
+![sudo apt install nginxを実行](./assets/03/04.jpg)
+
+インストールが完了したらコンソールに`nginx -v`と入力してみてください。インストールしたnginxのバージョンが表示されたら成功です。
+
+![sudo apt install nginxを実行](./assets/03/05.jpg)
+
+### パケットフィルター
+
+nginxをインストールしましたが、まだこの状態ではじめのURLにアクセスしてもつながりません。もう1つ「パケットフィルター」の設定が必要です。パケットフィルターとは、どういう通信を許可するか？、というVPSへの通信制限を行うものです。これをWebサーバーとして成立するように設定していきます。
+
+VPSの画面から「パケットフィルター設定」をクリックします。
+
+![sudo apt install nginxを実行](./assets/03/06.jpg)
+
+「パケットフィルターを設定」をクリック。
+
+![sudo apt install nginxを実行](./assets/03/07.jpg)
+
+「パケットフィルター設定を追加する」をクリック。
+
+![sudo apt install nginxを実行](./assets/03/08.jpg)
+
+２行目の枠の「フィルターの種類」を「Web」に変更。
+
+![sudo apt install nginxを実行](./assets/03/09.jpg)
+
+「設定を保存する」をクリック。
+
+![sudo apt install nginxを実行](./assets/03/10.jpg)
+
+これでWebサーバーとしての通信が行えるようになりました。
+
+この状態で最初のURLにもう一度アクセスしてみましょう。「Welcome to nginx!」と表示されていたら成功です。
+
+![sudo apt install nginxを実行](./assets/03/11.jpg)
