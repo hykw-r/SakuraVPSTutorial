@@ -92,7 +92,7 @@ index index.html index.htm index.nginx-debian.html;
 
 試しに`less index.nginx-debian.html`とすると「Welcome to nginx!」のhtmlが確認できます。
 
-![ls /var/www/html](./assets/04/07.jpg)
+![less index.nginx-debian.html](./assets/04/07.jpg)
 
 つまりnginxをインストールした直後は`/var/www/html/index.nginx-debian.html`のファイルしか存在しないためにnginxのhtmlが表示されていましたが、今回`/var/www/html/index.html`というファイルを作成したために、設定ファイル的に`index.html`が優先されて返却されブラウザで表示されたということになります。
 
