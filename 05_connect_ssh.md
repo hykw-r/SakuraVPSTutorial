@@ -63,29 +63,96 @@ PowerShellを開きます
 （「公開鍵認証」については色々なところで解説されているので調べてみてください。）
 
 ### 公開鍵の生成（Mac）
-※これらの操作はVPS上ではなくローカルマシン上で行います
+※これらの操作はVPS上ではなくローカルマシン（お手元のPC）上で行います
 
 ターミナルで`ssh-keygen`と入力。
 
-![tail -f /var/log/auth.log](./assets/05/10.jpg)
+![ssh-keygen](./assets/05/10.jpg)
 
 すると鍵のファイル名を尋ねられます。何も入力せずにEnterを押せば括弧内のファイル名（この例で言えば`/Users/hayakawa/.ssh`というディレクトリに`id_ed25519`というファイル名）で作成されます。今回はファイル名を`sakura`としました。（パスを指定していないとコマンドを実行した時のカレントディレクトリ直下に作成されてしまうので注意）
 
-![tail -f /var/log/auth.log](./assets/05/11.jpg)
+![鍵の名前を指定](./assets/05/11.jpg)
 
 続いて「パスフレーズ」の設定を求められます。何も入力せずにEnterを押せば"パスフレーズなし"という扱いになりますが、セキュリティのため任意のパスフレーズを入れておきましょう。
 
-![tail -f /var/log/auth.log](./assets/05/12.jpg)
+![鍵の生成成功](./assets/05/12.jpg)
 
 最後に何やら図形っぽいもの（「ランダムアート」）が表示されたら成功です。
 
 ### 公開鍵の生成（Windows）
-※これらの操作はVPS上ではなくローカルマシン上で行います
+※これらの操作はVPS上ではなくローカルマシン（お手元のPC）上で行います
 
 ※画面はWindows10です
 
 PowerShellで`C:\Windows\System32\OpenSSH\ssh-keygen`と入力してEnter。
 以降は☝️のmacのやり方と同様です。
 
-![tail -f /var/log/auth.log](./assets/05/13.png)
+![ssh-keygen](./assets/05/13.png)
 
+### VPSに公開鍵を設置する
+
+作成した公開鍵をVPS側に設置していきます。
+
+コンソールで以下のコマンドを実行してください。
+
+```bash
+cat {作成した公開鍵のパス} | ssh ubuntu@{あなたのvpsのipアドレス} 'mkdir -p ~/.ssh && chmod 700 ~/.ssh && cat >> ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys'
+```
+
+1. `cat`コマンドで公開鍵ファイルの中身を取得
+2. `ssh`でVPSにログイン、`~/.ssh/authorized_keys`というファイルを作成
+3. `~/.ssh/authorized_keys`に1.のデータを流し込む
+
+ということをやっています。
+
+なのでこのコマンドを実行した後にVPSにログインしてファイルが作成されていれば成功です。
+
+![VPS上にファイルが生成されている](./assets/05/14.jpg)
+
+### VPSを公開鍵認証の設定にする
+
+公開鍵認証の準備が整ったので、VPSのパスワード認証をオフにし、公開鍵認証のみでログインできる設定に変更します。
+
+まずVPSにログインします。この時点ではパスワード認証で問題ありません。
+
+![vpsにログイン](./assets/05/15.jpg)
+
+`sudo vim /etc/ssh/sshd_config`と入力してEnter。
+
+![sudo vim /etc/ssh/sshd_config](./assets/05/16.jpg)
+
+下の方にスクロールすると`#PubkeyAuthentication yes`という行があります。これの`#`を削除してください。
+
+![#PubkeyAuthentication yes](./assets/05/17.jpg)
+
+![PubkeyAuthentication yes](./assets/05/18.jpg)
+
+さらに下にスクロールすると`#PasswordAuthentication yes`という行があります。これの`#`を削除し、`yes`を`no`に変更してください。
+
+![#PasswordAuthentication yes](./assets/05/19.jpg)
+
+![PasswordAuthentication no](./assets/05/20.jpg)
+
+これで編集は完了です。`:wq`で保存してvimを終了してください。
+
+編集した設定を反映させるために`sudo systemctl restart ssh`と入力してEnterで実行してください。
+
+![sudo systemctl restart ssh](./assets/05/21.jpg)
+
+それでは公開鍵認証に変わっているか確認します。
+
+まずこれまで通りの`ssh`コマンドだと`Permission denied（publickey）`と表示されると思います。（ただし鍵の名前をデフォルトのままで作成した場合はそのまま公開鍵認証が始まります）
+
+![普通にssh接続](./assets/05/22.jpg)
+
+では次に`ssh -i {作成した秘密鍵のパス} ubuntu@{あなたのvpsのipアドレス}`と実行してください。
+
+![秘密鍵を指定してssh](./assets/05/23.jpg)
+
+☝️パスフレーズを求められるので、鍵作成時に設定したパスフレーズを入力。
+
+![ログイン成功](./assets/05/24.jpg)
+
+ログインできたら成功です。
+
+これでよりセキュアにVPSにSSHログインできるようになりました🎉
