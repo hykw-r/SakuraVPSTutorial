@@ -69,7 +69,7 @@ PowerShellを開きます
 
 ![tail -f /var/log/auth.log](./assets/05/10.jpg)
 
-すると鍵のファイル名を尋ねられます。何も入力せずにEnterを押せば括弧内のファイル名（この例で言えば`id_ed25519`）で作成されます。今回は`sakura`としました。
+すると鍵のファイル名を尋ねられます。何も入力せずにEnterを押せば括弧内のファイル名（この例で言えば`/Users/hayakawa/.ssh`というディレクトリに`id_ed25519`というファイル名）で作成されます。今回はファイル名を`sakura`としました。（パスを指定していないとコマンドを実行した時のカレントディレクトリ直下に作成されてしまうので注意）
 
 ![tail -f /var/log/auth.log](./assets/05/11.jpg)
 
@@ -81,5 +81,11 @@ PowerShellを開きます
 
 ### 公開鍵の生成（Windows）
 ※画面はWindows10です
+
+PowerShellで`C:\Windows\System32\OpenSSH\ssh-keygen`と入力してEnter。
+以降は☝️のmacのやり方と同様です。
+
+![tail -f /var/log/auth.log](./assets/05/13.png)
+
 
 ※これらの操作はVPS上ではなくローカルマシン上で行います
