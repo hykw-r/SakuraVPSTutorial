@@ -80,6 +80,8 @@ PowerShellを開きます
 最後に何やら図形っぽいもの（「ランダムアート」）が表示されたら成功です。
 
 ### 公開鍵の生成（Windows）
+※これらの操作はVPS上ではなくローカルマシン上で行います
+
 ※画面はWindows10です
 
 PowerShellで`C:\Windows\System32\OpenSSH\ssh-keygen`と入力してEnter。
@@ -87,5 +89,3 @@ PowerShellで`C:\Windows\System32\OpenSSH\ssh-keygen`と入力してEnter。
 
 ![tail -f /var/log/auth.log](./assets/05/13.png)
 
-
-※これらの操作はVPS上ではなくローカルマシン上で行います
